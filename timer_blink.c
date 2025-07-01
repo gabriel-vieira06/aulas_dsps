@@ -6,9 +6,6 @@ void setup_gpio(void);
 __interrupt void ISR_TIMER0(void);
 __interrupt void ISR_TIMER1(void);
 
-// VARIÁVEIS GLOBAIS
-uint32_t count = 0;
-
 void main(void)
 {
 
