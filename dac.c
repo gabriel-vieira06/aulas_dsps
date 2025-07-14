@@ -58,7 +58,7 @@ void main(void)
 __interrupt void ISR_TIMER1(void)
 {
   
-    index = (index == 399) ? 0 : (index+1);
+    index = (index == 399) ? 0 : (index + 1);
     DacaRegs.DACVALS.all = offset1 + senotable[index];
     DacbRegs.DACVALS.all = offset2 + costable[index];
 
