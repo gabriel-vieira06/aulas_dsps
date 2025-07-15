@@ -34,11 +34,12 @@ void main(void)
     PieCtrlRegs.PIEIER1.bit.INTx7 = 1;          // HABILITA INTERRUPÇÃO COLUNA 7
 
     PieVectTable.ADCA1_INT        = &ISR_ADC;
-    PieCtrlRegs.PIEIER1.bit.INTx1 = 1;          // HABILITA INTERRUPÇÃO COLUNA 7
+    PieCtrlRegs.PIEIER1.bit.INTx1 = 1;          // HABILITA INTERRUPÇÃO COLUNA 1
 
     EDIS;
 
     IER |= M_INT1;  // HABILITA INTERRUPÇÃO LINHA 1
+    IER |= M_INT13;  // HABILITA INTERRUPÇÃO LINHA 13
 
     InitCpuTimers();
 
@@ -51,6 +52,9 @@ void main(void)
 
     // SETUP PWM
     setup_epwm();
+
+    // SETUP DAC
+    setup_dac();
 
     // GERA TABELAS SENO E COSSENO
     for (index = 0; index < 400; index++){
