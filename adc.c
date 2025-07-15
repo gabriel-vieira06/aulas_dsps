@@ -108,7 +108,7 @@ void setup_adc(void)
     AdcaRegs.ADCSOC0CTL.bit.ACQPS     = acqps;  // JANELA DE AMOSTRAGEM É 15 CICLOS DE SYSCLK
     AdcaRegs.ADCSOC0CTL.bit.TRIGSEL   = 0x17;   // SELECIONA EPWM10 COMO FONTE DO GATILHO DA CONVERSÃO
 
-    AdcaRegs.ADCSOC1CTL.bit.CHSEL     = 1;      // ADCINA4 - J7-69
+    AdcaRegs.ADCSOC1CTL.bit.CHSEL     = 4;      // ADCINA4 - J7-69
     AdcaRegs.ADCSOC1CTL.bit.ACQPS     = acqps;
     AdcaRegs.ADCSOC1CTL.bit.TRIGSEL   = 0x17;   // SELECIONA EPWM10 COMO FONTE DO GATILHO DA CONVERSÃO
 
