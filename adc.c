@@ -10,8 +10,9 @@ __interrupt void ISR_ADC(void);
 
 // VARIÁVEIS GLOBAIS
 uint16_t index = 0, offset1 = 0, offset2 = 0, senotable[400], costable[400];
-uint16_t indexadc = 0, adc1 = 0, adc2 = 0, plot[400];
-uint16_t *adc = &adc1;
+uint16_t indexadc = 0, adc1 = 0, adc2 = 0, plot1[400], plot2[400];
+uint16_t *adc1point = &adc1;
+uint16_t *adc2point = &adc2; 
 
 void main(void)
 {
@@ -179,7 +180,8 @@ __interrupt void ISR_ADC(void)
     adc2 = AdcaResultRegs.ADCRESULT1;
 
     indexadc = (indexadc == 399) ? 0 : (indexadc + 1);
-    plot[indexadc] = *adc;
+    plot1[indexadc] = *adc1point;
+    plot2[indexadc] = *adc2point;
 
     AdcaRegs.ADCINTFLGCLR.bit.ADCINT1 = 1;
     PieCtrlRegs.PIEACK.all = PIEACK_GROUP1;
