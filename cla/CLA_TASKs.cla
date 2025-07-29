@@ -1,0 +1,79 @@
+#include "CLA.h"
+
+__interrupt void CLA1Task1(void)
+{
+    GpioDataRegs.GPADAT.bit.GPIO15 = 1;
+
+    vrede_CLA = 0.0005*((int)AdcaResultRegs.ADCRESULT1 - 0x7FF);
+
+    cla1_pll.u[0] = vrede_CLA;
+    cla1_pll.osg_u[0] = (cla1_pll.osg_coeff.osg_b0*(cla1_pll.u[0]-cla1_pll.u[2])) + (cla1_pll.osg_coeff.osg_a1*cla1_pll.osg_u[1]) + (cla1_pll.osg_coeff.osg_a2*cla1_pll.osg_u[2]);
+    cla1_pll.osg_u[0] = (cla1_pll.osg_coeff.osg_b0*(cla1_pll.u[0]-cla1_pll.u[2])) + (cla1_pll.osg_coeff.osg_a1*cla1_pll.osg_u[1]) + (cla1_pll.osg_coeff.osg_a2*cla1_pll.osg_u[2]);
+    cla1_pll.osg_u[2] = cla1_pll.osg_u[1];
+    cla1_pll.osg_u[1] = cla1_pll.osg_u[0];
+    cla1_pll.osg_qu[0] = (cla1_pll.osg_coeff.osg_qb0*cla1_pll.u[0]) + (cla1_pll.osg_coeff.osg_qb1*cla1_pll.u[1]) + (cla1_pll.osg_coeff.osg_qb2*cla1_pll.u[2]) + (cla1_pll.osg_coeff.osg_a1*cla1_pll.osg_qu[1]) + (cla1_pll.osg_coeff.osg_a2*cla1_pll.osg_qu[2]);
+    cla1_pll.osg_qu[2] = cla1_pll.osg_qu[1];
+    cla1_pll.osg_qu[1] = cla1_pll.osg_qu[0];
+    cla1_pll.u[2] = cla1_pll.u[1];
+    cla1_pll.u[1] = cla1_pll.u[0];
+    // Park Transform from alpha beta to d-q axis            //
+    cla1_pll.u_Q[0] = (cla1_pll.cos_*cla1_pll.osg_u[0]) + (cla1_pll.sin_*cla1_pll.osg_qu[0]);
+    cla1_pll.u_D[0] = (cla1_pll.cos_*cla1_pll.osg_qu[0]) - (cla1_pll.sin_*cla1_pll.osg_u[0]);
+    // Loop Filter                     //
+    cla1_pll.ylf[0]=cla1_pll.ylf[1] + (cla1_pll.lpf_coeff.B0_lf*cla1_pll.u_Q[0]) + (cla1_pll.lpf_coeff.B1_lf*cla1_pll.u_Q[1]);
+    cla1_pll.ylf[1]=cla1_pll.ylf[0];
+    cla1_pll.u_Q[1]=cla1_pll.u_Q[0];
+
+    cla1_pll.fo=cla1_pll.fn+cla1_pll.ylf[0];
+    cla1_pll.theta[0]=cla1_pll.theta[1] + (cla1_pll.fo*cla1_pll.delta_T)*6.2831853072;
+
+    if(cla1_pll.theta[0] > 6.2831853072)
+        cla1_pll.theta[0] -= 6.2831853072;
+    else if(cla1_pll.theta[0] < -6.2831853072)
+        cla1_pll.theta[0] += 6.2831853072;
+
+    cla1_pll.theta[1] = cla1_pll.theta[0];
+    cla1_pll.sin_ = CLAsin(cla1_pll.theta[0]);
+    cla1_pll.cos_ = CLAcos(cla1_pll.theta[0]);
+
+    EPwm8Regs.CMPA.bit.CMPA = (uint16_t) (1627.0 * (1.0 + ampl_CLA * CLAsin(cla1_pll.theta[0] + phase_CLA)));
+
+    GpioDataRegs.GPADAT.bit.GPIO15 = 0;
+
+    asm(" MSTOP");
+}
+
+__interrupt void CLA1Task2(void)
+{
+    // asm(" MSTOP");
+}
+
+__interrupt void CLA1Task3(void)
+{
+    // asm(" MSTOP");
+}
+
+__interrupt void CLA1Task4(void)
+{
+    // asm(" MSTOP");
+}
+
+__interrupt void CLA1Task5(void)
+{
+    // asm(" MSTOP");
+}
+
+__interrupt void CLA1Task6(void)
+{
+    // asm(" MSTOP");
+}
+
+__interrupt void CLA1Task7(void)
+{
+    // asm(" MSTOP");
+}
+
+__interrupt void CLA1Task8(void)
+{
+    // asm(" MSTOP");
+}
