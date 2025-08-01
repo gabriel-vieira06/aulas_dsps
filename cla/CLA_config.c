@@ -23,9 +23,9 @@ void CLA1_ConfigCLAMemory(void)
     MemCfgRegs.LSxMSEL.bit.MSEL_LS5 = 1;
     MemCfgRegs.LSxCLAPGM.bit.CLAPGM_LS5 = 1;
     MemCfgRegs.LSxMSEL.bit.MSEL_LS0 = 1;
-    MemCfgRegs.LSxCLAPGM.bit.CLAPGM_LS0 = 1;
+    MemCfgRegs.LSxCLAPGM.bit.CLAPGM_LS0 = 0;
     MemCfgRegs.LSxMSEL.bit.MSEL_LS1 = 1;
-    MemCfgRegs.LSxCLAPGM.bit.CLAPGM_LS1 = 1;
+    MemCfgRegs.LSxCLAPGM.bit.CLAPGM_LS1 = 0;
     EDIS;
 }
 
