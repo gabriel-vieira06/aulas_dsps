@@ -4,7 +4,7 @@ __interrupt void CLA1Task1(void)
 {
     GpioDataRegs.GPADAT.bit.GPIO15 = 1;
 
-    vrede_CLA = 0.0005*((int)AdcaResultRegs.ADCRESULT1 - 0x7FF);
+    vrede_CLA = 0.0005*((int)AdcaResultRegs.ADCRESULT0 - 0x7FF);
 
     cla1_pll.u[0] = vrede_CLA;
     cla1_pll.osg_u[0] = (cla1_pll.osg_coeff.osg_b0*(cla1_pll.u[0]-cla1_pll.u[2])) + (cla1_pll.osg_coeff.osg_a1*cla1_pll.osg_u[1]) + (cla1_pll.osg_coeff.osg_a2*cla1_pll.osg_u[2]);
