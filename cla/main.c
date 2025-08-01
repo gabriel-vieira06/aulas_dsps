@@ -1,11 +1,9 @@
 #include "F28x_Project.h"
-#include "math.h"
 
 #include "sogi.h"
 #include "CLA_config.h"
-#include "CLA.h"
 
-// CABE«ALHO DE FUN«’ES
+// CABE√áALHO DE FUN√á√ïES
 void setup_dac(void);
 void setup_adc(void);
 void setup_epwm(void);
@@ -13,7 +11,7 @@ void setup_gpio(void);
 __interrupt void ISR_TIMER1(void);
 __interrupt void ISR_ADC(void);
 
-// VARI¡VEIS GLOBAIS
+// VARI√ÅVEIS GLOBAIS
 uint32_t count = 0, index = 0;
 
 SPLL_SOGI v_pll;
@@ -43,28 +41,28 @@ void main(void)
 {
 
     InitSysCtrl();  // INICIALIZA CPU
-    DINT;           // DESABILITA INTERRUP«’ES
+    DINT;           // DESABILITA INTERRUP√á√ïES
 
     InitPieCtrl();
 
-    IER = 0x0000;   // DESABILITA INTERRUP«’ES DA CPU
-    IFR = 0x0000;   // LIMPA AS FLAGS DE INTERRUP«√O
+    IER = 0x0000;   // DESABILITA INTERRUP√á√ïES DA CPU
+    IFR = 0x0000;   // LIMPA AS FLAGS DE INTERRUP√á√ÉO
 
     InitPieVectTable();
 
-    // INTERRUP«’ES
+    // INTERRUP√á√ïES
     EALLOW;
 
     PieVectTable.TIMER1_INT       = &ISR_TIMER1;
-    PieCtrlRegs.PIEIER1.bit.INTx7 = 1;          // HABILITA INTERRUP«√O COLUNA 7
+    PieCtrlRegs.PIEIER1.bit.INTx7 = 1;          // HABILITA INTERRUP√á√ÉO COLUNA 7
 
     PieVectTable.ADCA1_INT        = &ISR_ADC;
-    PieCtrlRegs.PIEIER1.bit.INTx1 = 1;          // HABILITA INTERRUP«√O COLUNA 1
+    PieCtrlRegs.PIEIER1.bit.INTx1 = 1;          // HABILITA INTERRUP√á√ÉO COLUNA 1
 
     EDIS;
 
-    IER |= M_INT1;   // HABILITA INTERRUP«√O LINHA 1
-    IER |= M_INT13;  // HABILITA INTERRUP«√O LINHA 13
+    IER |= M_INT1;   // HABILITA INTERRUP√á√ÉO LINHA 1
+    IER |= M_INT13;  // HABILITA INTERRUP√á√ÉO LINHA 13
 
     InitCpuTimers();
 
@@ -94,8 +92,8 @@ void main(void)
     SOGI_init(60, 32.5520833E-06, &cla1_pll);
     SOGI_coeff_update(32.5520833E-06, 376.99112, 0.7, &cla1_pll);
 
-    EINT;   // HABILITA AS INTERRUP«’ES GLOBAIS
-    ERTM;   // HABILITA AS INTERRUP«’ES REALTIME
+    EINT;   // HABILITA AS INTERRUP√á√ïES GLOBAIS
+    ERTM;   // HABILITA AS INTERRUP√á√ïES REALTIME
 
     while(1){}
 }
@@ -109,13 +107,13 @@ void setup_dac(void)
     DacaRegs.DACCTL.all = 0x0001;       // BIT0 = 3v3 (0) ou 3v (1)
     DacaRegs.DACVALS.all = 0x0800;      // SET DAC A TO MID RANGE
     DacaRegs.DACOUTEN.bit.DACOUTEN = 1; // HABILITA DAC A COMO OUTPUT
-    DacaRegs.DACLOCK.all = 0x0000;      // LOCK = 1 IMPEDE ALTERA«’ES
+    DacaRegs.DACLOCK.all = 0x0000;      // LOCK = 1 IMPEDE ALTERA√á√ïES
 
     // PIN 30
     DacbRegs.DACCTL.all = 0x0001;       // BIT0 = 3v3 (0) ou 3v (1)
     DacbRegs.DACVALS.all = 0x0800;      // SET DAC B TO MID RANGE
     DacbRegs.DACOUTEN.bit.DACOUTEN = 1; // HABILITA DAC B COMO OUTPUT
-    DacbRegs.DACLOCK.all = 0x0000;      // LOCK = 1 IMPEDE ALTERA«’ES
+    DacbRegs.DACLOCK.all = 0x0000;      // LOCK = 1 IMPEDE ALTERA√á√ïES
 
     EDIS;   // DESABILITA ESCRITA EM REGISTRADORES PROTEGIDOS
 }
@@ -124,7 +122,7 @@ void setup_adc(void)
 {
     Uint16 acqps;
 
-    // DETERMINA A JANELA DE AQUISI«√O MÕNIMA EM SYSCLKS BASEADO NA RESOLU«√O
+    // DETERMINA A JANELA DE AQUISI√á√ÉO M√çNIMA EM SYSCLKS BASEADO NA RESOLU√á√ÉO
     // 12 BITS => 15 CLKS == 15ns
     // 16 BITS => 64 CLKS == 320ns
     acqps = (ADC_RESOLUTION_12BIT == AdcaRegs.ADCCTL2.bit.RESOLUTION) ? 14 : 63;
@@ -141,16 +139,16 @@ void setup_adc(void)
     DELAY_US(1000);
 
     AdcaRegs.ADCSOC0CTL.bit.CHSEL     = 3;      // ADCINA3 - J3-26
-    AdcaRegs.ADCSOC0CTL.bit.ACQPS     = acqps;  // JANELA DE AMOSTRAGEM … 15 CICLOS DE SYSCLK
-    AdcaRegs.ADCSOC0CTL.bit.TRIGSEL   = 0x17;   // SELECIONA EPWM10 COMO FONTE DO GATILHO DA CONVERS√O
+    AdcaRegs.ADCSOC0CTL.bit.ACQPS     = acqps;  // JANELA DE AMOSTRAGEM √â 15 CICLOS DE SYSCLK
+    AdcaRegs.ADCSOC0CTL.bit.TRIGSEL   = 0x17;   // SELECIONA EPWM10 COMO FONTE DO GATILHO DA CONVERS√ÉO
 
     AdcaRegs.ADCSOC1CTL.bit.CHSEL     = 4;      // ADCINA4 - J7-69
     AdcaRegs.ADCSOC1CTL.bit.ACQPS     = acqps;
-    AdcaRegs.ADCSOC1CTL.bit.TRIGSEL   = 0x17;   // SELECIONA EPWM10 COMO FONTE DO GATILHO DA CONVERS√O
+    AdcaRegs.ADCSOC1CTL.bit.TRIGSEL   = 0x17;   // SELECIONA EPWM10 COMO FONTE DO GATILHO DA CONVERS√ÉO
 
-    AdcaRegs.ADCINTSEL1N2.bit.INT1SEL = 0x01;   // AO FIM DE SOC1 SER¡ SETADO A FLAG INT1
+    AdcaRegs.ADCINTSEL1N2.bit.INT1SEL = 0x01;   // AO FIM DE SOC1 SER√Å SETADO A FLAG INT1
     AdcaRegs.ADCINTSEL1N2.bit.INT1E   = 1;      // HABILITA FLAG INT1
-    AdcaRegs.ADCINTFLGCLR.bit.ADCINT1 = 1;      // GARANTE QUE INT1 EST¡ ZERADA
+    AdcaRegs.ADCINTFLGCLR.bit.ADCINT1 = 1;      // GARANTE QUE INT1 EST√Å ZERADA
 
     EDIS;
 }
@@ -168,12 +166,12 @@ void setup_epwm(void)
     CpuSysRegs.PCLKCR2.bit.EPWM10  = 1;                // HABILITA CLOCK
 
     EPwm10Regs.TBPRD               = 3255;             // LAB ADC
-    EPwm10Regs.TBPHS.bit.TBPHS     = 0;                // FASE … 0
+    EPwm10Regs.TBPHS.bit.TBPHS     = 0;                // FASE √â 0
     EPwm10Regs.TBCTL.bit.SYNCOSEL  = TB_CTR_ZERO;
     EPwm10Regs.TBCTR               = 0x0000;           // LIMPA CONTADOR
     EPwm10Regs.TBCTL.bit.CTRMODE   = TB_COUNT_UPDOWN;  // CONTA PRA CIMA E PARA BAIXO
     EPwm10Regs.TBCTL.bit.PHSEN     = TB_DISABLE;       // DESABILITA CARGA DE FASE
-    EPwm10Regs.TBCTL.bit.HSPCLKDIV = TB_DIV1;          // DIVISOR DE CLOCK EM RELA«√O A SYSCLKOUT
+    EPwm10Regs.TBCTL.bit.HSPCLKDIV = TB_DIV1;          // DIVISOR DE CLOCK EM RELA√á√ÉO A SYSCLKOUT
     EPwm10Regs.TBCTL.bit.CLKDIV    = TB_DIV1;
 
     // LARGURA DO PULSO DE 50%
@@ -184,7 +182,7 @@ void setup_epwm(void)
     EPwm10Regs.CMPCTL.bit.SHDWBMODE = CC_SHADOW;     // CARREGA REGISTRADORES A CADA ZERO
     EPwm10Regs.CMPCTL.bit.LOADBMODE = CC_CTR_ZERO_PRD;
 
-    EPwm10Regs.AQCTLA.bit.PRD = AQ_NO_ACTION;       // CARREGA A«’ES PARA EPWM10A
+    EPwm10Regs.AQCTLA.bit.PRD = AQ_NO_ACTION;       // CARREGA A√á√ïES PARA EPWM10A
     EPwm10Regs.AQCTLA.bit.ZRO = AQ_NO_ACTION;
     EPwm10Regs.AQCTLA.bit.CAU = AQ_CLEAR;
     EPwm10Regs.AQCTLA.bit.CAD = AQ_SET;
@@ -220,7 +218,7 @@ void setup_epwm(void)
     EPwm1Regs.CMPCTL.bit.SHDWBMODE = CC_SHADOW;     // CARREGA REGISTRADORES A CADA ZERO
     EPwm1Regs.CMPCTL.bit.LOADBMODE = CC_CTR_ZERO_PRD;
 
-    EPwm1Regs.AQCTLA.bit.PRD = AQ_NO_ACTION;       // CARREGA A«’ES PARA EPWM1A
+    EPwm1Regs.AQCTLA.bit.PRD = AQ_NO_ACTION;       // CARREGA A√á√ïES PARA EPWM1A
     EPwm1Regs.AQCTLA.bit.ZRO = AQ_NO_ACTION;
     EPwm1Regs.AQCTLA.bit.CAU = AQ_CLEAR;
     EPwm1Regs.AQCTLA.bit.CAD = AQ_SET;
@@ -255,7 +253,7 @@ void setup_epwm(void)
     EPwm7Regs.CMPCTL.bit.SHDWAMODE = CC_SHADOW;     // CARREGA REGISTRADORES A CADA ZERO
     EPwm7Regs.CMPCTL.bit.LOADAMODE = CC_CTR_ZERO_PRD;
 
-    EPwm7Regs.AQCTLA.bit.PRD = AQ_NO_ACTION;       // CARREGA A«’ES PARA EPWM7A
+    EPwm7Regs.AQCTLA.bit.PRD = AQ_NO_ACTION;       // CARREGA A√á√ïES PARA EPWM7A
     EPwm7Regs.AQCTLA.bit.ZRO = AQ_NO_ACTION;
     EPwm7Regs.AQCTLA.bit.CAU = AQ_CLEAR;
     EPwm7Regs.AQCTLA.bit.CAD = AQ_SET;
@@ -292,7 +290,7 @@ void setup_epwm(void)
     EPwm8Regs.CMPCTL.bit.SHDWAMODE = CC_SHADOW;     // CARREGA REGISTRADORES A CADA ZERO
     EPwm8Regs.CMPCTL.bit.LOADAMODE = CC_CTR_ZERO_PRD;
 
-    EPwm8Regs.AQCTLA.bit.PRD = AQ_NO_ACTION;       // CARREGA A«’ES PARA EPWM8A
+    EPwm8Regs.AQCTLA.bit.PRD = AQ_NO_ACTION;       // CARREGA A√á√ïES PARA EPWM8A
     EPwm8Regs.AQCTLA.bit.ZRO = AQ_NO_ACTION;
     EPwm8Regs.AQCTLA.bit.CAU = AQ_CLEAR;
     EPwm8Regs.AQCTLA.bit.CAD = AQ_SET;
